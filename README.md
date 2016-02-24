@@ -12,3 +12,64 @@ webpack
 popd
 ./gradlew bootRun
 ```
+
+# REST API
+```bash
+$ curl localhost:8080/api
+{
+  "_links" : {
+    "employees" : {
+      "href" : "http://localhost:8080/api/employees"
+    },
+    "profile" : {
+      "href" : "http://localhost:8080/api/profile"
+    }
+  }
+}
+
+
+$ curl localhost:8080/api/employees
+{
+  "_embedded" : {
+    "employees" : [ {
+      "firstName" : "Frodo",
+      "lastName" : "Baggins",
+      "description" : "ring bearer",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/employees/1"
+        }
+      }
+    } ]
+  }
+}
+
+
+$ curl localhost:8080/api/employees/1
+{
+  "firstName" : "Frodo",
+  "lastName" : "Baggins",
+  "description" : "ring bearer",
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/api/employees/1"
+    }
+  }
+}
+
+
+$ curl -X POST localhost:8080/api/employees -d '{"firstName": "Bilbo", "lastName": "Baggins", "description": "burglar"}' -H 'Content-Type:application/json'
+{
+  "firstName" : "Bilbo",
+  "lastName" : "Baggins",
+  "description" : "burglar",
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/api/employees/2"
+    }
+  }
+}
+
+
+
+```
