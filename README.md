@@ -13,7 +13,9 @@ popd
 ./gradlew bootRun
 ```
 
-# REST API
+### REST API
+
+#### Tour API
 ```bash
 $ curl localhost:8080/api
 {
@@ -26,8 +28,10 @@ $ curl localhost:8080/api
     }
   }
 }
+```
 
-
+#### List employees
+```bash
 $ curl localhost:8080/api/employees
 {
   "_embedded" : {
@@ -44,7 +48,8 @@ $ curl localhost:8080/api/employees
   }
 }
 
-
+#### View employee detail
+```bash
 $ curl localhost:8080/api/employees/1
 {
   "firstName" : "Frodo",
@@ -58,6 +63,8 @@ $ curl localhost:8080/api/employees/1
 }
 
 
+#### Add employee
+```bash
 $ curl -X POST localhost:8080/api/employees -d '{"firstName": "Bilbo", "lastName": "Baggins", "description": "burglar"}' -H 'Content-Type:application/json'
 {
   "firstName" : "Bilbo",
