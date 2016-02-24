@@ -47,6 +47,7 @@ $ curl localhost:8080/api/employees
     } ]
   }
 }
+```
 
 #### View employee detail
 ```bash
@@ -61,7 +62,7 @@ $ curl localhost:8080/api/employees/1
     }
   }
 }
-
+```
 
 #### Add employee
 ```bash
@@ -76,7 +77,4 @@ $ curl -X POST localhost:8080/api/employees -d '{"firstName": "Bilbo", "lastName
     }
   }
 }
-
-
-
 ```
