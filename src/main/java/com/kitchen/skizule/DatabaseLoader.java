@@ -1,5 +1,7 @@
-package com.greglturnquist.payroll;
+package com.kitchen.skizule;
 
+import com.kitchen.skizule.entities.Employee;
+import com.kitchen.skizule.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
