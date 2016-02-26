@@ -1,7 +1,7 @@
 'use strict';
 
 const React = require('react');
-const client = require('./client');
+const client = require('../client');
 import EmployeeList from './employeelist.js';
 
 class App extends React.Component {
