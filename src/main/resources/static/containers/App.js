@@ -1,10 +1,11 @@
 'use strict';
 
-const React = require('react');
 const client = require('../client');
-import EmployeeList from './employeelist.js';
 
-class App extends React.Component {
+import React, { Component } from 'react'
+import EmployeeList from './../components/employeelist.js';
+
+class App extends Component {
 
 	constructor(props) {
 		super(props);
@@ -12,6 +13,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log('mounted')
 		client({method: 'GET', path: '/api/employees'}).done(response => {
 			this.setState({employees: response.entity._embedded.employees});
 		});

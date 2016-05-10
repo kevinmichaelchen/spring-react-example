@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-    entry: './components/app.js',
+    entry: './containers/App.js',
     devtool: 'sourcemaps',
     cache: true,
     debug: true,
