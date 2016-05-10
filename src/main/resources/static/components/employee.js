@@ -1,6 +1,6 @@
 'use strict';
 
-const React = require('react');
+import React, { Component, PropTypes } from 'react'
 
 class Employee extends React.Component {
   render() {
