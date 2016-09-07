@@ -13,6 +13,7 @@ beanstalk {
             war = tasks.war
             application = "${project.name}"
             environment = "${project.name}-staging"
+            template = 'src/main/config/development.json'
         }
         // Example to create a new env for each version
         // (to use URL swapping for blue/green deployment)
