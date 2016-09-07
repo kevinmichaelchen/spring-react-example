@@ -1,0 +1,59 @@
+apply plugin: 'jp.classmethod.aws'
+
+aws {
+    profileName = 'credentials-profile-name-in-your-profile-configuration-file (~/.aws/credentials)'
+    region = project.awsRegion
+}
+
+task echoprops << {
+    println "name = " + project.name
+    println "artifactId = " + project.artifactId
+}
+
+apply plugin: 'jp.classmethod.aws.beanstalk'
+beanstalk {
+    String extension = project.war.archiveName.tokenize('.').last()
+    String timestamp = new Date().format("yyyyMMdd'_'HHmmss", TimeZone.default)
+
+    appName project.name
+    appDesc project.description
+
+    version {
+        label = "${artifactId}-${project.war.version}-${timestamp}"
+        description = "${artifactId} v${version}"
+        bucket = 'sample-bucket'
+        key = "eb-apps/${artifactId}-${project.war.version}-${timestamp}.${extension}"
+    }
+
+    configurationTemplates {
+        production {
+            optionSettings = file('src/main/config/production.json')
+            solutionStackName = project.awsSolutionStackName
+        }
+        development {
+            optionSettings = file('src/main/config/development.json')
+            solutionStackName = project.awsSolutionStackName
+        }
+    }
+
+    environment {
+        envName = 'foobar'
+        envDesc = 'foobar demo application development environment'
+        templateName = 'development'
+        versionLabel = "foobar-${project.war.version}-${timestamp}"
+    }
+}
+
+task uploadBundle(type: jp.classmethod.aws.gradle.s3.AmazonS3FileUploadTask, dependsOn: createBundle) {
+    group "AWS"
+    description "Upload ${artifactId} application bundle file to S3."
+
+    bucketName "elasticbeanstalk-${aws.region}-${aws.accountId}"
+    key "eb-apps/${artifactId}/${artifactId}-${versionDesc}.zip"
+    file project.createBundle.archivePath
+    overwrite project.version.endsWith("-SNAPSHOT")
+}
+awsEbCreateApplicationVersion.dependsOn uploadBundle
+
+
+// task awsEbMigrateEnvironment, awsEbDeleteApplication and so on are declared

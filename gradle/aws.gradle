@@ -1,47 +1,27 @@
-apply plugin: 'jp.classmethod.aws'
-
-aws {
-    profileName = 'credentials-profile-name-in-your-profile-configuration-file (~/.aws/credentials)'
-    region = project.awsRegion
-}
-
-task echoprops << {
-    println "name = " + project.name
-    println "artifactId = " + project.artifactId
-}
-
-apply plugin: 'jp.classmethod.aws.beanstalk'
+apply plugin: "fi.evident.beanstalk"
 beanstalk {
-    String extension = project.war.archiveName.tokenize('.').last()
-    String timestamp = new Date().format("yyyyMMdd'_'HHmmss", TimeZone.default)
+    def region = project.awsRegion
+    profile = 'default' // Only required if using .aws/credentials
+    //http://docs.aws.amazon.com/general/latest/gr/rande.html
+    //us-east-1 doesn't need to specify itself in s3 endpoint
+    s3Endpoint = "s3.amazonaws.com"
+    beanstalkEndpoint = "elasticbeanstalk.${region}.amazonaws.com"
 
-    appName project.name
-    appDesc project.description
-
-    version {
-        label = "${artifactId}-${project.war.version}-${timestamp}"
-        description = "${artifactId} v${version}"
-        bucket = 'sample-bucket'
-        key = "eb-apps/${artifactId}-${project.war.version}-${timestamp}.${extension}"
-    }
-
-    configurationTemplates {
+    deployments {
+        // Example to deploy to the same env
+        staging {
+            war = tasks.war
+            application = "${project.name}"
+            environment = "${project.name}-staging"
+        }
+        // Example to create a new env for each version
+        // (to use URL swapping for blue/green deployment)
         production {
-            optionSettings = file('src/main/config/production.json')
-            solutionStackName = project.awsSolutionStackName
+            war = tasks.war
+            application = "${project.name}"
+            environment = "${project.name}-${project.version.replaceAll('\\.', '-')}"
+            // Saved configuration name to use to create each env
+            template = 'default'
         }
-        development {
-            optionSettings = file('src/main/config/development.json')
-            solutionStackName = project.awsSolutionStackName
-        }
-    }
-
-    environment {
-        envName = 'foobar'
-        envDesc = 'foobar demo application development environment'
-        templateName = 'development'
-        versionLabel = "foobar-${project.war.version}-${timestamp}"
     }
 }
-
-// task awsEbMigrateEnvironment, awsEbDeleteApplication and so on are declared
