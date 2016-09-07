@@ -5,11 +5,6 @@ aws {
     region = project.awsRegion
 }
 
-task echoprops << {
-    println "name = " + project.name
-    println "artifactId = " + project.artifactId
-}
-
 apply plugin: 'jp.classmethod.aws.beanstalk'
 beanstalk {
     String extension = project.war.archiveName.tokenize('.').last()
