@@ -20,7 +20,7 @@ description = "Spring Boot Hello World"
 ext {
     artifactId = project.name
     awsSolutionStackName = '64bit Amazon Linux 2016.09 running Spring Boot Java 8'
-    awsRegion = 'us-west-2'
+    awsRegion = 'us-east-1'
 }
 
 apply plugin: 'java'
