@@ -1,0 +1,42 @@
+apply plugin: 'jp.classmethod.aws'
+
+aws {
+    profileName = 'credentials-profile-name-in-your-profile-configuration-file (~/.aws/credentials)'
+    region = 'ap-northeast-1'
+}
+
+apply plugin: 'jp.classmethod.aws.beanstalk'
+beanstalk {
+    String extension = project.war.archiveName.tokenize('.').last()
+    String timestamp = new Date().format("yyyyMMdd'_'HHmmss", TimeZone.default)
+
+    appName 'foobar'
+    appDesc 'foobar demo application'
+
+    version {
+        label = "foobar-${project.war.version}-${timestamp}"
+        description = "${artifactId} v${version}"
+        bucket = 'sample-bucket'
+        key = "eb-apps/foobar-${project.war.version}-${timestamp}.${extension}"
+    }
+
+    configurationTemplates {
+        production {
+            optionSettings = file('src/main/config/production.json')
+            solutionStackName = '64bit Amazon Linux 2013.09 running Tomcat 7 Java 7'
+        }
+        development {
+            optionSettings = file('src/main/config/development.json')
+            solutionStackName = '64bit Amazon Linux 2013.09 running Tomcat 7 Java 7'
+        }
+    }
+
+    environment {
+        envName = 'foobar'
+        envDesc = 'foobar demo application development environment'
+        templateName = 'development'
+        versionLabel = "foobar-${project.war.version}-${timestamp}"
+    }
+}
+
+// task awsEbMigrateEnvironment, awsEbDeleteApplication and so on are declared
